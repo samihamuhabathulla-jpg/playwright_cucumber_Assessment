@@ -5,14 +5,7 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-  "register": "cucumber-js --config cucumber.js --tags @register",
-  "login": "cucumber-js --config cucumber.js --tags @Login",
-  "test": "cucumber-js",
-  "smoke": "cucumber-js --tags @smoke",
-  "regression": "cucumber-js --tags @regression",
-  "parallel": "cucumber-js --parallel 2",
-  "failed": "cucumber-js @rerun/rerun.txt",
-  "report": "npx ts-node src/utils/report.mts"
+    "posttest": "npx ts-node src/test/utils/report.mts"
   },
   "keywords": [],
   "author": "",
@@ -29,6 +22,7 @@
     "allure-cucumberjs": "^3.10.2",
     "allure-js-commons": "^3.10.2",
     "cross-env": "^10.1.0",
+    "multiple-cucumber-html-reporter": "^4.1.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2",
     "winston": "^3.19.0"

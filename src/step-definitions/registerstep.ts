@@ -1,29 +1,27 @@
-import { Given, When, Then } from "@cucumber/cucumber";
+import {Given, When, Then} from "@cucumber/cucumber";
+import { expect } from "@playwright/test";
 import { CustomWorld } from "../support/CustomWorld";
-import { readCSV } from "../utils/csvReader";
-
-let registerData: any;
-
-Given("User opens the Demo Web Shop registration page", async function (this: CustomWorld) {
-    await this.registerPage.openRegisterPage();
+Given('the user is on demo web shop register page',async function (this:CustomWorld) {
+    console.log(process.env.BASEURL);
+    await this.page.goto(process.env.BASEURL!);
 });
 
-When("User registers using CSV data", async function (this: CustomWorld) {
-    const data = await readCSV("test-data/register.csv");
-    registerData = data[0];
-
-    await this.registerPage.registerUser(
-        registerData.firstname,
-        registerData.lastname,
-        registerData.email,
-        registerData.password,
-        registerData.confirmPassword
-    );
-
+When('the user fills the credentials', async function (this:CustomWorld,dataTable) {
+    const data = dataTable.hashes()[0];
+    await this.registerPage.enteringDetails(data.fname,data.lname,data.email);
 });
 
-Then("Registration should be successfull", async function (this: CustomWorld) {
-    await this.registerPage.verifyRegistrationSuccess();
-    await this.registerPage.clickContinue();
+When('fills the password and confirm password', async function (this:CustomWorld,dataTable) {
+  // Write code here that turns the phrase above into concrete actions
+  const data = dataTable.hashes()[0];
+  await this.registerPage.enteringpassword(data.pass,data.cpass);
+});
 
+When('then user clicks the register button and then continue', async function (this:CustomWorld) {
+  // Write code here that turns the phrase above into concrete actions
+  await this.registerPage.register();
+});
+
+Then('the user should be directed to the home page successfully', async function (this:CustomWorld) {
+  await expect(this.registerPage.books).toBeVisible();
 });

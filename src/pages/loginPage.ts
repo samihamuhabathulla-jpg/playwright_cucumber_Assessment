@@ -1,60 +1,31 @@
-import { Page, Locator, expect } from "@playwright/test";
+import {Page,Locator} from "@playwright/test";
 
-export class LoginPage {
+export class LoginPage{
+    private page:Page;
+    private loginclick:Locator;
+    private email:Locator;
+    private pass:Locator;
+    private loginbtn:Locator;
+    readonly books:Locator;
+    readonly errormsg:Locator;
 
-    readonly page: Page;
-    readonly loginLink: Locator;
-    readonly email: Locator;
-    readonly password: Locator;
-    readonly loginButton: Locator;
-    readonly logoutLink: Locator;
-    readonly errorMessage: Locator;
-
-    constructor(page: Page) {
-
+    constructor(page:Page){
         this.page = page;
-
-        this.loginLink = page.locator(".ico-login");
-        this.email = page.locator("#Email");
-        this.password = page.locator("#Password");
-        this.loginButton = page.locator("input.button-1.login-button");
-        this.logoutLink = page.locator(".ico-logout");
-        this.errorMessage = page.locator(".validation-summary-errors");
+        this.loginclick = page.getByRole('link', { name: 'Log in' });
+        this.email = page.getByRole('textbox', { name: 'Email:' });
+        this.pass = page.getByRole('textbox', { name: 'Password:' });
+        this.loginbtn = page.getByRole('button', { name: 'Log in' });
+        this.books = page.locator("div[class='block block-category-navigation'] li:nth-child(1) a:nth-child(1)");
+        this.errormsg = page.getByText('Login was unsuccessful. Please correct the errors and try again. The')
     }
-
-    async openLoginPage() {
-
-        await this.page.goto("https://demowebshop.tricentis.com/");
-        await this.loginLink.click();
-
+    async clickLogin(){
+        await this.loginclick.click();
     }
-
-    async login(email: string, password: string) {
-
+    async enteringDetails(email:string,pass:string){
         await this.email.fill(email);
-        await this.password.fill(password);
-        await this.loginButton.click();
-
+        await this.pass.fill(pass);
     }
-
-    async verifySuccessfulLogin() {
-
-        await expect(this.logoutLink).toBeVisible();
-
+    async login(){
+        await this.loginbtn.click();
     }
-
-    async verifyFailedLogin() {
-
-        await expect(this.errorMessage).toContainText("Login was unsuccessful.");
-
-    }
-
-    async logout() {
-
-        if (await this.logoutLink.isVisible()) {
-            await this.logoutLink.click();
-        }
-
-    }
-
 }

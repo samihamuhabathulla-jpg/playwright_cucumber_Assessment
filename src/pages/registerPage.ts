@@ -1,90 +1,37 @@
-import { Page, Locator, expect } from "@playwright/test";
+import {Page, Locator} from "@playwright/test";
+export class Registerpage{
+    private page:Page;
+    private fname:Locator;
+    private lname:Locator;
+    private email:Locator;
+    private pass:Locator;
+    private cpass:Locator;
+    private registerbtn:Locator;
+    private continue:Locator;
+    readonly books:Locator;
 
-export class RegisterPage {
-    readonly page: Page;
-
-    readonly registerLink: Locator;
-    readonly genderFemale: Locator;
-    readonly firstName: Locator;
-    readonly lastName: Locator;
-    readonly email: Locator;
-    readonly password: Locator;
-    readonly confirmPassword: Locator;
-    readonly registerButton: Locator;
-    readonly successMessage: Locator;
-    readonly continueButton: Locator;
-
-    constructor(page: Page) {
+    constructor(page:Page){
         this.page = page;
-
-        this.registerLink = page.locator(".ico-register");
-        this.genderFemale = page.locator("#gender-female");  
-        this.firstName = page.locator("#FirstName");
-        this.lastName = page.locator("#LastName");
-        this.email = page.locator("#Email");
-        this.password = page.locator("#Password");
-        this.confirmPassword = page.locator("#ConfirmPassword");
-        this.registerButton = page.locator("#register-button");
-        this.successMessage = page.locator(".result");
-        this.continueButton = page.locator(".register-continue-button");
+        this.fname = page.getByRole('textbox', { name: 'First name:' });
+        this.lname = page.getByRole('textbox', { name: 'Last name:' });
+        this.email = page.getByRole('textbox', { name: 'Email:' });
+        this.pass = page.getByRole('textbox', { name: 'Password:', exact: true });
+        this.cpass = page.getByRole('textbox', { name: 'Confirm password:' });
+        this.registerbtn = page.getByRole('button', { name: 'Register' });
+        this.continue = page.locator("input[value='Continue']");
+        this.books = page.locator("div[class='block block-category-navigation'] li:nth-child(1) a:nth-child(1)");
     }
-
-    async openRegisterPage() {
-
-        await this.page.goto("https://demowebshop.tricentis.com/");
-        await this.registerLink.click();
-    }
-
-    async selectGender() {
-        await this.genderFemale.check();
-    }
-
-    async enterFirstName(firstName: string) {
-        await this.firstName.fill(firstName);
-    }
-
-    async enterLastName(lastName: string) {
-        await this.lastName.fill(lastName);
-    }
-
-    async enterEmail(email: string) {
+    async enteringDetails(fname:string,lname:string,email:string){
+        await this.fname.fill(fname);
+        await this.lname.fill(lname);
         await this.email.fill(email);
     }
-
-    async enterPassword(password: string) {
-        await this.password.fill(password);
+    async enteringpassword(pass:string,cpass:string){
+        await this.pass.fill(pass);
+        await this.cpass.fill(cpass);
     }
-
-    async enterConfirmPassword(confirmPassword: string) {
-        await this.confirmPassword.fill(confirmPassword);
-    }
-
-    async clickRegister() {
-        await this.registerButton.click();
-    }
-
-    async registerUser(
-        firstName: string,
-        lastName: string,
-        email: string,
-        password: string,
-        confirmPassword: string
-    ){
-
-        await this.selectGender();
-        await this.enterFirstName(firstName);
-        await this.enterLastName(lastName);
-        await this.enterEmail(email);
-        await this.enterPassword(password);
-        await this.enterConfirmPassword(confirmPassword);
-        await this.clickRegister();
-    }
-
-    async verifyRegistrationSuccess() {
-        await expect(this.successMessage).toHaveText("Your registration completed");
-    }
-
-    async clickContinue() {
-        await this.continueButton.click();
+    async register(){
+        await this.registerbtn.click();
+        await this.continue.click();
     }
 }
