@@ -1,0 +1,4 @@
+email,password,result
+samiha2@gmail.com,Samiha@2005,success
+user@gmail.com,Samiha@2005,failure
+samiha2@gmail.com,sami@123,failure
